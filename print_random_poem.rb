@@ -1,6 +1,6 @@
 # encoding: UTF-8
+require 'httpclient'
 require 'multi_json'
-require 'redis'
 
 def put_border(str)
   if str[0] == ' '
@@ -33,13 +33,7 @@ def print_poem(title, author, poem)
   puts "".center(w, ':')
 end
 
-
-#filename = ARGV[0]
-#data = MultiJson.load(File.read(filename), :symbolize_keys => true)
-
-redis = Redis.new
-i = redis.srandmember("poems:ids").to_i
-title = redis.get "poems:#{i}:title"
-author = redis.get "poems:#{i}:author"
-poem = redis.get "poems:#{i}:poem"
-print_poem(title, author, poem)
+client = HTTPClient.new
+res = client.get('http://localhost:4567/poem')
+poem = MultiJson.load(res.body, :symbolize_keys => true)
+print_poem(poem[:title], poem[:author], poem[:content])

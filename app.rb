@@ -12,5 +12,5 @@ get '/poem' do
   title = redis.get "poems:#{i}:title"
   author = redis.get "poems:#{i}:author"
   poem = redis.get "poems:#{i}:poem"
-  return MultiJson.dump({:title => title, :author => author, :poem => poem})
+  return MultiJson.dump({:title => title, :author => author, :content => poem})
 end
